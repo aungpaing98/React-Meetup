@@ -2,10 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import {FavoriteContentProvider} from './store/favorite-contents';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <FavoriteContentProvider>
     <App />
-  </React.StrictMode>,
+    </FavoriteContentProvider>,
   document.getElementById('root')
 );

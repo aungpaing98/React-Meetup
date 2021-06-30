@@ -1,27 +1,46 @@
-import MeetupList from '../components/meetup/MeetupList'
-
-const DUMMY_DATA = [
-    {
-        id: 1,
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_Great_Wall_of_China_at_Jinshanling-edit.jpg/1200px-The_Great_Wall_of_China_at_Jinshanling-edit.jpg",
-        title: "The Great Wall",
-        address: "China",
-        description: "One of the Greatest Art"
-    },
-    {
-        id: 2,
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/The_Great_Wall_of_China_at_Jinshanling-edit.jpg/1200px-The_Great_Wall_of_China_at_Jinshanling-edit.jpg",
-        title: "The Great Wall",
-        address: "China",
-        description: "One of the Greatest Art"
-    }
-]
+import { useState, useEffect } from "react";
+import MeetupList from "../components/meetup/MeetupList";
 
 
-function AllMeetups(){
-    return <div>
-            <MeetupList meetups={DUMMY_DATA} /> 
+function AllMeetups() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadedMeetup, setLoadedMeetup] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetch("https://react-meetup-ee022-default-rtdb.firebaseio.com/meetups.json")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const meetups = []
+        for (const key in data){
+            const meetup = {
+                id: key,
+                ...data[key]
+            };
+            meetups.push(meetup)
+        };
+
+        setIsLoading(false);
+        setLoadedMeetup(meetups);
+        console.log(meetups);
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <section>
+        <p>Loading ... </p>
+      </section>
+    );
+  }
+
+  return (
+    <div>
+      <MeetupList meetups={loadedMeetup} />
     </div>
-};
+  );
+}
 
 export default AllMeetups;
